@@ -26,4 +26,22 @@ public class ClientRepository {
         inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         outputStream = new DataOutputStream(socket.getOutputStream());
     }
+
+    public void sendMessage(String message) throws IOException {
+        sendMessage(message.getBytes());
+    }
+
+    public void sendMessage(byte[] bytes) throws IOException {
+        outputStream.write(bytes);
+        outputStream.flush();
+    }
+
+    public String readMessage() throws IOException {
+        String message = "";
+        while(!inputReader.ready()) { /* Await until messages area ready to be read */}
+        while(inputReader.ready()) {
+            message += (char) inputReader.read();
+        }
+        return message;
+    }
 }
