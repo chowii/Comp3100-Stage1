@@ -4,15 +4,15 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "server")
-public class Server {
+public class Server implements Comparable<Server> {
 
     private String type;
     private String limit;
     private String bootupTime;
     private String hourlyRate;
-    private String coreCount;
-    private String memory;
-    private String disk;
+    private int coreCount;
+    private int memory;
+    private int disk;
 
     public void setType(String type) {
         this.type = type;
@@ -30,15 +30,15 @@ public class Server {
         this.hourlyRate = hourlyRate;
     }
 
-    public void setCoreCount(String coreCount) {
+    public void setCoreCount(int coreCount) {
         this.coreCount = coreCount;
     }
 
-    public void setMemory(String memory) {
+    public void setMemory(int memory) {
         this.memory = memory;
     }
 
-    public void setDisk(String disk) {
+    public void setDisk(int disk) {
         this.disk = disk;
     }
 
@@ -63,17 +63,17 @@ public class Server {
     }
 
     @XmlAttribute(name = "coreCount")
-    public String getCoreCount() {
+    public int getCoreCount() {
         return coreCount;
     }
 
     @XmlAttribute(name = "memory")
-    public String getMemory() {
+    public int getMemory() {
         return memory;
     }
 
     @XmlAttribute(name = "disk")
-    public String getDisk() {
+    public int getDisk() {
         return disk;
     }
 
@@ -92,5 +92,13 @@ public class Server {
                 memory +
                 " disk: " +
                 disk;
+    }
+
+    @Override
+    public int compareTo(Server server) {
+        int coreComparison = Integer.compare(coreCount, server.coreCount);
+        int memoryComparison = Integer.compare(memory, server.memory);
+        int diskComparison = Integer.compare(disk, server.disk);
+        return coreComparison != 0 ? coreComparison : memoryComparison != 0 ? memoryComparison : diskComparison;
     }
 }
