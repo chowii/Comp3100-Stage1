@@ -3,6 +3,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ClientRepository {
 
@@ -11,6 +12,8 @@ public class ClientRepository {
     private Socket socket;
     private BufferedReader inputReader;
     private DataOutputStream outputStream;
+    String message = "";
+    public boolean isNoneReceived = false;
 
     public ClientRepository() {
         this("localhost", 50_000);
@@ -28,7 +31,8 @@ public class ClientRepository {
     }
 
     public void sendMessage(String message) throws IOException {
-        sendMessage(message.getBytes());
+        outputStream.write((message + "\n").getBytes());
+        outputStream.flush();
     }
 
     public void sendMessage(byte[] bytes) throws IOException {
@@ -37,11 +41,37 @@ public class ClientRepository {
     }
 
     public String readMessage() throws IOException {
-        String message = "";
-        while(!inputReader.ready()) { /* Await until messages area ready to be read */}
-        while(inputReader.ready()) {
-            message += (char) inputReader.read();
-        }
+        message = inputReader.readLine();
+        isNoneReceived = message.equals("NONE");
         return message;
+    }
+
+    public String getLastMessage() {
+        return message;
+    }
+
+    public BufferedReader getInputReader() {
+        return inputReader;
+    }
+
+    public ArrayList<String> readMultiLineFromServer(int numLines) {
+        try {
+            ArrayList<String> lines = new ArrayList<String>();
+            for (int i = 0; i < numLines; i++) {
+                message = readMessage();
+                lines.add(message);
+                isNoneReceived = message.equals("NONE");
+            }
+            return lines;
+        } catch (IOException e) {
+            message = "Error";
+            return null;
+        }
+    }
+
+    public void close() throws IOException {
+        inputReader.close();
+        outputStream.close();
+        socket.close();
     }
 }
