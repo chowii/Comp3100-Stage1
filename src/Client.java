@@ -17,7 +17,7 @@ public class Client {
         DsSystem dsSystem = null;
 
         try {
-            dsSystem = ParseXml.parse("/home/sabbib/IdeaProjects/Comp3100/src/ds-system.xml", DsSystem.class);
+            dsSystem = ParseXml.parse("/home/chowii/IdeaProjects/Comp3100/src/ds-system.xml", DsSystem.class);
         } catch (JAXBException e) {
             e.printStackTrace();
         }

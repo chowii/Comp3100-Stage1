@@ -50,7 +50,7 @@ for conf in $configDir/*.xml; do
 	fi
 	sleep 1
 	if [ -f $1 ] && [[ $1 == *".class" ]]; then
-		/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -javaagent:/home/sabbib/.local/share/JetBrains/Toolbox/apps/IDEA-U/ch-0/203.7148.57/lib/idea_rt.jar=42823:/home/sabbib/.local/share/JetBrains/Toolbox/apps/IDEA-U/ch-0/203.7148.57/bin -Dfile.encoding=UTF-8 -classpath /home/sabbib/IdeaProjects/Comp3100/out/production/Comp3100-Stage1:/home/sabbib/IdeaProjects/Comp3100/lib/activation-1.1.1.jar:/home/sabbib/IdeaProjects/Comp3100/lib/jaxb-impl-2.0.1.jar:/home/sabbib/IdeaProjects/Comp3100/lib/jaxb-api-2.2.jar Client
+		/home/chowii/.jdks/corretto-11.0.10/bin/java -javaagent:/home/chowii/.local/share/JetBrains/Toolbox/apps/IDEA-U/ch-0/211.6693.111/lib/idea_rt.jar=45595:/home/chowii/.local/share/JetBrains/Toolbox/apps/IDEA-U/ch-0/211.6693.111/bin -Dfile.encoding=UTF-8 -classpath /home/chowii/IdeaProjects/Comp3100/out/production/Comp3100:/home/chowii/IdeaProjects/Comp3100/lib/org.eclipse.persistence.moxy-2.7.3.jar:/home/chowii/IdeaProjects/Comp3100/lib/jaxb-api-2.2.jar:/home/chowii/IdeaProjects/Comp3100/lib/jaxb-api-2.3.1.jar:/home/chowii/IdeaProjects/Comp3100/lib/activation-1.1.1.jar:/home/chowii/IdeaProjects/Comp3100/lib/jaxb-impl-2.0.1.jar Client
 	else
 		./$1
 	fi

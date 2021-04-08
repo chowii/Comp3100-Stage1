@@ -18,10 +18,10 @@
 #/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -javaagent:/home/sabbib/.local/share/JetBrains/Toolbox/apps/IDEA-U/ch-0/203.7148.57/lib/idea_rt.jar=42865:/home/sabbib/.local/share/JetBrains/Toolbox/apps/IDEA-U/ch-0/203.7148.57/bin -Dfile.encoding=UTF-8 -classpath /home/sabbib/IdeaProjects/Comp3100/out/production/Comp3100-Stage1:/home/sabbib/IdeaProjects/Comp3100/lib/activation-1.1.1.jar:/home/sabbib/IdeaProjects/Comp3100/lib/jaxb-impl-2.0.1.jar:/home/sabbib/IdeaProjects/Comp3100/lib/jaxb-api-2.2.jar Client
 
 echo Removing compiled class files
-rm /home/sabbib/IdeaProjects/Comp3100/src/*.class
+rm /home/chowii/IdeaProjects/Comp3100/src/*.class
 echo Removed compiled class files
 sleep 1
 echo Copying compiled class files
-cp /home/sabbib/IdeaProjects/Comp3100/out/production/Comp3100-Stage1/*.class /home/sabbib/IdeaProjects/Comp3100/src
-cp /home/sabbib/IdeaProjects/Comp3100/out/production/Comp3100-Stage1/data/*.class /home/sabbib/IdeaProjects/Comp3100/src
+cp /home/chowii/IdeaProjects/Comp3100/out/production/Comp3100/data/*.class /home/chowii/IdeaProjects/Comp3100/src
+cp /home/chowii/IdeaProjects/Comp3100/out/production/Comp3100/*.class /home/chowii/IdeaProjects/Comp3100/src
 echo Copied compiled class files
