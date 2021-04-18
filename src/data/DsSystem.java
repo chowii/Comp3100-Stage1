@@ -11,6 +11,10 @@ public class DsSystem {
         this.serverArray = serverArray;
     }
 
+    /**
+     * returns the serverArray which was obtained from the file
+     * DsSystem.XML
+     */
     @XmlElement(name = "servers")
     public ServerArray getServerArray() {
         return serverArray;

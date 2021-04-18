@@ -7,6 +7,10 @@ public class ServerArray {
 
     private List<Server> serverList;
 
+    /**
+     * returns the serverList where the XML
+     * attribute name is "server".
+     */
     @XmlElement(name = "server")
     public List<Server> getServerList() {
         return serverList;

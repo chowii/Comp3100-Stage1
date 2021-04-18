@@ -10,6 +10,10 @@ public class Config {
     private ServerArray mServerArray;
     private String mRandomSeed;
 
+    /**
+     * Obtains the random seed stored in the ds-sample
+     * Configuration files.
+     */
     @XmlAttribute(name = "randomSeed")
     public String getRandomSeed() {
         return mRandomSeed;
@@ -19,6 +23,10 @@ public class Config {
         this.mRandomSeed = mRandomSeed;
     }
 
+    /**
+     * returns the serverArray which was obtained from the
+     * Configuration files.
+     */
     @XmlElement(name = "servers")
     public ServerArray getServerArray() {
         return mServerArray;

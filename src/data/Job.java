@@ -9,6 +9,12 @@ public class Job {
     int memory;
     int disk;
 
+    /**
+     * Parses all the XML of the job into this class
+     * using a string array.
+     *
+     * @param jM
+     */
     public Job(String[] jM) {
         this(
                 jM[0],
@@ -22,6 +28,18 @@ public class Job {
 
     }
 
+    /**
+     * A parameterized version of parsing the data
+     * into the job class, with 7 parameters.
+     *
+     * @param jobType
+     * @param submitTime
+     * @param jobId
+     * @param estRuntime
+     * @param core
+     * @param memory
+     * @param disk
+     */
     public Job(String jobType, int submitTime, int jobId, int estRuntime, int core, int memory, int disk) {
         this.jobType = jobType; // JOBN or JOBP
         this.submitTime = submitTime;
