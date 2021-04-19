@@ -21,7 +21,7 @@ fi
 
 if [ ! -f $1 ]; then
 	echo "No $1 found! Compiling"
-	/usr/lib/jvm/java-11-openjdk-amd64/bin/javac -classpath /home/chowii/IdeaProjects/Comp3100-Stage1/out/production/Comp3100-Stage1:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/activation-1.1.1.jar:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/jaxb-api-2.3.1.jar:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/org.eclipse.persistence.moxy-2.7.3.jar:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/jaxb-api-2.2.jar:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/jaxb-impl-2.0.1.jar *.java data/*.java
+	/usr/lib/jvm/java-11-openjdk-amd64/bin/javac -classpath /home/chowii/IdeaProjects/Comp3100-Stage1/out/production/Comp3100-Stage1:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/activation-1.1.1.jar:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/jaxb-api-2.3.1.jar:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/org.eclipse.persistence.moxy-2.7.3.jar:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/jaxb-api-2.2.jar:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/jaxb-impl-2.0.1.jar *.java data/*.java scheduler/*.java
   if [ ! -f $1 ]; then
 	  echo "Usage: $0 your_client [-n]"
 	  exit

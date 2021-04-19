@@ -1,6 +1,9 @@
 import data.DsSystem;
 import data.Job;
 import data.Server;
+import scheduler.LargestServerProvider;
+import scheduler.ServerProvider;
+
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -15,6 +18,7 @@ public class Client {
     private ClientRepository mRepository;
     private String message;
     Server largestServer = null;
+    ServerProvider mServerProvider = null;
 
     /**
      * [main]
@@ -34,15 +38,16 @@ public class Client {
             e.printStackTrace();
         }
         ClientRepository repository = new ClientRepository();
-        Client client = new Client(repository);
+        Client client = new Client(repository, new LargestServerProvider());
         client.connectToServer();
         client.serverHandshake();
         client.largestServer = Collections.max(dsSystem.getServerArray().getServerList());
         client.scheduleJobs();
     }
 
-    public Client(ClientRepository repository) {
+    public Client(ClientRepository repository, ServerProvider serverProvider) {
         mRepository = repository;
+        mServerProvider = serverProvider;
     }
 
     //Calling the connectToServer method from the ClientRepository
@@ -105,8 +110,7 @@ public class Client {
                         ArrayList<String> serverStatus = mRepository.readMultiLineFromServer(numOfLines);
                         mRepository.sendMessage("OK");
                         message = mRepository.readMessage();
-                        //Get the JOB and schedule it to the largestServer
-                        mRepository.sendMessage("SCHD " + job.getJobId() + " " + getFirstLargestServer(serverStatus));
+                        mRepository.sendMessage("SCHD " + job.getJobId() + " " + mServerProvider.getServer(serverStatus, largestServer.getType()));
                         break;
                     //When server sends a complete message we send a REDY to fetch another job
                     case "JCPL":
@@ -133,28 +137,5 @@ public class Client {
             //Connection closes
             mRepository.close();
         }
-    }
-    /**
-    * [getFirstLargestServer]
-    * This method essentialy obtain the largest server type
-    * this is needed when we are doing the job scheduling since we
-    * are only sending the jobs to the largest server in stage1
-    *
-    * @param ArrayList<String> serverStatusList
-    * @return
-    */
-    public String getFirstLargestServer(ArrayList<String> serverStatusList) {
-        String largestServerType = largestServer.getType();
-        int id = 0;
-        String[] statusValueArray;
-        //Loops through the whole ArrayList to find the largestServerType
-        for(String status : serverStatusList) {
-            statusValueArray = status.split(" ");
-            if (statusValueArray[0].equals(largestServerType)) {
-                id = Math.min(Integer.parseInt(statusValueArray[1]), id);
-            }
-        }
-        //returns a string of the largest servertype followed by the id
-        return largestServerType + " " + id;
     }
 }
