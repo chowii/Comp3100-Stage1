@@ -16,7 +16,7 @@ public class ClientRepository {
     public boolean isNoneReceived = false;
 
     public ClientRepository() {
-      //Running on 127.0.0.1/localhost on the default port of 50_000
+        // Running on 127.0.0.1/localhost on the default port of 50_000
         this("localhost", 50_000);
     }
 
@@ -27,37 +27,23 @@ public class ClientRepository {
 
     public void connectToServer() throws IOException {
         socket = new Socket(mHost, mPort);
-        //initalise inputReader to read messages
+        // initalise inputReader to read messages
         inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        //initalise outputStream to send messages
+        // initalise outputStream to send messages
         outputStream = new DataOutputStream(socket.getOutputStream());
     }
 
     public void sendMessage(String message) throws IOException {
-        //Sends message from String form
+        // Sends message from String form
         outputStream.write((message + "\n").getBytes());
-        outputStream.flush();
-    }
-
-    public void sendMessage(byte[] bytes) throws IOException {
-        //Sends message from byte form
-        outputStream.write(bytes);
         outputStream.flush();
     }
 
     public String readMessage() throws IOException {
         message = inputReader.readLine();
-        //Reads message and checks if "NONE" is recieved if so, boolean is = true
+        // Reads message and checks if "NONE" is recieved if so, boolean is = true
         isNoneReceived = message.equals("NONE");
         return message;
-    }
-
-    public String getLastMessage() {
-        return message;
-    }
-
-    public BufferedReader getInputReader() {
-        return inputReader;
     }
 
     /**
@@ -69,18 +55,18 @@ public class ClientRepository {
      * the boolean value will turn true, and will catch any IOExceptions if
      * necessary
      *
-     * @param  (int) numLines
+     * @param (int) numLines
      * @return ArrayList<String>
      */
     public ArrayList<String> readMultiLineFromServer(int numLines) {
         try {
-          //stores 'n' number of lines read into an Arraylist
+            // stores 'n' number of lines read into an Arraylist
             ArrayList<String> lines = new ArrayList<String>();
-            //Loop which reads the messages and stores it into an ArrayList
+            // Loop which reads the messages and stores it into an ArrayList
             for (int i = 0; i < numLines; i++) {
                 message = readMessage();
                 lines.add(message);
-                //boolean to check if "NONE" has been read
+                // boolean to check if "NONE" has been read
                 isNoneReceived = message.equals("NONE");
             }
             return lines;
@@ -91,7 +77,7 @@ public class ClientRepository {
     }
 
     public void close() throws IOException {
-      //Closes all the streams and connections
+        // Closes all the streams and connections
         inputReader.close();
         outputStream.close();
         socket.close();

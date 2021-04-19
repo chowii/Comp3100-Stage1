@@ -14,7 +14,7 @@ public class Server implements Comparable<Server> {
     private int memory;
     private int disk;
 
-    //The Setters for the server
+    // The Setters for the server
     public void setType(String type) {
         this.type = type;
     }

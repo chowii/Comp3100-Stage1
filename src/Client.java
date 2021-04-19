@@ -5,13 +5,10 @@ import scheduler.LargestServerProvider;
 import scheduler.ServerProvider;
 
 import java.io.IOException;
-import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 import javax.xml.bind.JAXBException;
 
 public class Client {
@@ -22,12 +19,11 @@ public class Client {
 
     /**
      * [main]
-     * The main fucnction which calls and runs all the other methods
+     * The main function which calls and runs all the other methods
      * resulting in the scheduling of jobs via the specification
      *
      * @param args
      */
-
     public static void main(String[] args) {
         DsSystem dsSystem = null;
 
@@ -50,7 +46,7 @@ public class Client {
         mServerProvider = serverProvider;
     }
 
-    //Calling the connectToServer method from the ClientRepository
+    // Calling the connectToServer method from the ClientRepository
     public void connectToServer() {
         try {
             mRepository.connectToServer();
@@ -60,9 +56,9 @@ public class Client {
     }
 
     /**
-     *  [serverHandshake description]
-     *  Initialising the connection between the client and the server
-     *  and getting the Auth along with the device name to print
+     * [serverHandshake description]
+     * Initialising the connection between the client and the server
+     * and getting the Auth along with the device name to print
      */
     public void serverHandshake() {
         try {
@@ -75,6 +71,7 @@ public class Client {
         }
 
     }
+
     /**
      * [scheduleJobs]
      * This is the main job scheduling part after handshaking with the server
@@ -88,19 +85,19 @@ public class Client {
      */
     private void scheduleJobs() {
         try {
-            //Sends the first "REDY" to obatin the first job
+            // Sends the first "REDY" to obtain the first job
             mRepository.sendMessage("REDY");
             String[] messageArray = null;
 
-            //If a "NONE" is not recieved from the server it means that there are more jobs to schedule
+            // If a "NONE" is not recieved from the server it means that there are more jobs to schedule
             while (!mRepository.isNoneReceived) {
 
-                //After the message has been read, we then split it into mutiple parts by placing it in an array
+                // After the message has been read, we then split it into mutiple parts by placing it in an array
                 message = mRepository.readMessage();
                 messageArray = message.split(" ");
 
-                 switch(messageArray[0]) {
-                    case "JOBN": //same as "JOBP"
+                switch (messageArray[0]) {
+                    case "JOBN": // same as "JOBP"
                     case "JOBP":
                         Job job = new Job(messageArray);
                         mRepository.sendMessage("GETS Avail " + job.GET());
@@ -112,13 +109,13 @@ public class Client {
                         message = mRepository.readMessage();
                         mRepository.sendMessage("SCHD " + job.getJobId() + " " + mServerProvider.getServer(serverStatus, largestServer.getType()));
                         break;
-                    //When server sends a complete message we send a REDY to fetch another job
+                    // When server sends a complete message we send a REDY to fetch another job
                     case "JCPL":
                     case "OK":
                         mRepository.sendMessage("REDY");
                         break;
-                     default:
-                     break;
+                    default:
+                        break;
                 }
             }
 
@@ -128,13 +125,14 @@ public class Client {
         }
 
     }
+
     public void quit() throws IOException {
-        //Sends a message to the server to "QUIT"
+        // Sends a message to the server to "QUIT"
         mRepository.sendMessage("QUIT");
         message = mRepository.readMessage();
-        //Server sends back response to "Quit"
+        // Server sends back response to "Quit"
         if (message.equals("QUIT")) {
-            //Connection closes
+            // Connection closes
             mRepository.close();
         }
     }
