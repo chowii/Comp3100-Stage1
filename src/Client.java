@@ -2,6 +2,9 @@ import data.DsSystem;
 import data.Job;
 import data.Server;
 import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -25,8 +28,8 @@ public class Client {
         DsSystem dsSystem = null;
 
         try {
-            //Using our parsing class and giving the location of the ds-system.xml file to parse the data
-            dsSystem = ParseXml.parse("/home/chowii/IdeaProjects/Comp3100/src/ds-system.xml", DsSystem.class);
+            Path absolutePath = FileSystems.getDefault().getPath("").toAbsolutePath();
+            dsSystem = ParseXml.parse(absolutePath + "/ds-system.xml", DsSystem.class);
         } catch (JAXBException e) {
             e.printStackTrace();
         }

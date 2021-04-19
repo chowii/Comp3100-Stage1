@@ -20,9 +20,12 @@ if [ $# -lt 1 ]; then
 fi
 
 if [ ! -f $1 ]; then
-	echo "No $1 found!"
-	echo "Usage: $0 your_client [-n]"
-	exit
+	echo "No $1 found! Compiling"
+	/usr/lib/jvm/java-11-openjdk-amd64/bin/javac -classpath /home/chowii/IdeaProjects/Comp3100-Stage1/out/production/Comp3100-Stage1:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/activation-1.1.1.jar:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/jaxb-api-2.3.1.jar:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/org.eclipse.persistence.moxy-2.7.3.jar:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/jaxb-api-2.2.jar:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/jaxb-impl-2.0.1.jar *.java data/*.java
+  if [ ! -f $1 ]; then
+	  echo "Usage: $0 your_client [-n]"
+	  exit
+  fi
 fi
 
 trap "kill 0" EXIT
@@ -50,7 +53,7 @@ for conf in $configDir/*.xml; do
 	fi
 	sleep 1
 	if [ -f $1 ] && [[ $1 == *".class" ]]; then
-		/home/chowii/.jdks/corretto-11.0.10/bin/java -javaagent:/home/chowii/.local/share/JetBrains/Toolbox/apps/IDEA-U/ch-0/211.6693.111/lib/idea_rt.jar=45595:/home/chowii/.local/share/JetBrains/Toolbox/apps/IDEA-U/ch-0/211.6693.111/bin -Dfile.encoding=UTF-8 -classpath /home/chowii/IdeaProjects/Comp3100/out/production/Comp3100:/home/chowii/IdeaProjects/Comp3100/lib/org.eclipse.persistence.moxy-2.7.3.jar:/home/chowii/IdeaProjects/Comp3100/lib/jaxb-api-2.2.jar:/home/chowii/IdeaProjects/Comp3100/lib/jaxb-api-2.3.1.jar:/home/chowii/IdeaProjects/Comp3100/lib/activation-1.1.1.jar:/home/chowii/IdeaProjects/Comp3100/lib/jaxb-impl-2.0.1.jar Client
+		/usr/lib/jvm/java-11-openjdk-amd64/bin/java -javaagent:/home/chowii/.local/share/JetBrains/Toolbox/apps/IDEA-U/ch-0/211.6693.111/lib/idea_rt.jar=44487:/home/chowii/.local/share/JetBrains/Toolbox/apps/IDEA-U/ch-0/211.6693.111/bin -Dfile.encoding=UTF-8 -classpath /home/chowii/IdeaProjects/Comp3100-Stage1/out/production/Comp3100-Stage1:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/activation-1.1.1.jar:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/jaxb-api-2.3.1.jar:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/org.eclipse.persistence.moxy-2.7.3.jar:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/jaxb-api-2.2.jar:/home/chowii/IdeaProjects/Comp3100-Stage1/lib/jaxb-impl-2.0.1.jar Client
 	else
 		./$1
 	fi
@@ -67,4 +70,3 @@ for conf in $configDir/*.xml; do
 done
 
 echo "testing done! check $configDir/$diffLog"
-
