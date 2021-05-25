@@ -50,6 +50,22 @@ public class Job {
         this.disk = disk;
     }
 
+    public int getEstRuntime() {
+        return estRuntime;
+    }
+
+    public int getCore() {
+        return core;
+    }
+
+    public int getMemory() {
+        return memory;
+    }
+
+    public int getDisk() {
+        return disk;
+    }
+
     public int getJobId() {
         return jobId;
     }

@@ -6,6 +6,7 @@ import java.io.StringReader;
 
 public class ParseXml {
 
+    @SuppressWarnings("unchecked")
     public static <T> T parse(String location, Class<T> clazz) throws JAXBException {
         JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();

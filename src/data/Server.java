@@ -184,4 +184,8 @@ public class Server implements Comparable<Server> {
         int diskComparison = Integer.compare(disk, server.disk);
         return coreComparison != 0 ? coreComparison : memoryComparison != 0 ? memoryComparison : diskComparison;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }
