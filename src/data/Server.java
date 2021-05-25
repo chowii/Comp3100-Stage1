@@ -14,6 +14,34 @@ public class Server implements Comparable<Server> {
     private int memory;
     private int disk;
 
+    private int estimatedRuntime;
+    private String state;
+    private int id;
+
+    public Server() {
+        // empty default constructor
+    }
+
+    public Server(String type, String limit, String bootupTime, String hourlyRate, int coreCount, int memory, int disk) {
+        this.type = type;
+        this.limit = limit;
+        this.bootupTime = bootupTime;
+        this.hourlyRate = hourlyRate;
+        this.coreCount = coreCount;
+        this.memory = memory;
+        this.disk = disk;
+    }
+
+    public Server(String type, int id, String state, int estimatedRuntime, int coreCount, int memory, int disk) {
+        this.type = type;
+        this.id = id;
+        this.state = state;
+        this.estimatedRuntime = estimatedRuntime;
+        this.coreCount = coreCount;
+        this.memory = memory;
+        this.disk = disk;
+    }
+
     // The Setters for the server
     public void setType(String type) {
         this.type = type;
@@ -113,9 +141,25 @@ public class Server implements Comparable<Server> {
         return disk;
     }
 
+    public int getEstimatedRuntime() {
+        return estimatedRuntime;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "type: " + type +
+                " id: " +
+                id +
+                " state: " +
+                state +
                 " limit: " +
                 limit +
                 " bootupTime: " +
@@ -127,7 +171,9 @@ public class Server implements Comparable<Server> {
                 " memory: " +
                 memory +
                 " disk: " +
-                disk;
+                disk +
+                " estimatedRuntime: " +
+                estimatedRuntime;
     }
 
     @Override
