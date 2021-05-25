@@ -1,14 +1,17 @@
 import data.DsSystem;
 import data.Job;
 import data.Server;
+import scheduler.FirstFitServerProvider;
 import scheduler.LargestServerProvider;
 import scheduler.ServerProvider;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import javax.xml.bind.JAXBException;
 
 public class Client {
@@ -25,11 +28,9 @@ public class Client {
      * @param args
      */
     public static void main(String[] args) {
+        System.out.println("Running");
         DsSystem dsSystem = null;
         ClientRepository repository = new ClientRepository();
-        Client client = new Client(repository, new LargestServerProvider());
-        client.connectToServer();
-        client.serverHandshake();
 
         try {
             Path absolutePath = FileSystems.getDefault().getPath("").toAbsolutePath();
@@ -37,8 +38,12 @@ public class Client {
         } catch (JAXBException e) {
             e.printStackTrace();
         }
-//        dsSystem.getServerArray().getServerList().stream().max(((server, t1) -> Integer.compare(server.get)))
-        client.largestServer = Collections.max(dsSystem.getServerArray().getServerList());
+
+        dsSystem.getServerArray().getServerList().sort(Comparator.comparingInt(Server::getCoreCount));
+        Client client = new Client(repository, new FirstFitServerProvider(dsSystem.getServerArray().getServerList()));
+        client.largestServer = dsSystem.getServerArray().getServerList().get(dsSystem.getServerArray().getServerList().size() - 1);
+        client.connectToServer();
+        client.serverHandshake();
         client.scheduleJobs();
     }
 
@@ -100,6 +105,7 @@ public class Client {
                 switch (messageArray[0]) {
                     case "JOBN": // same as "JOBP"
                     case "JOBP":
+                        System.out.println("JOBP: " + message);
                         Job job = new Job(messageArray);
                         mRepository.sendMessage("GETS Capable " + job.GET());
                         message = mRepository.readMessage();
@@ -109,7 +115,11 @@ public class Client {
 
                         mRepository.sendMessage("OK");
                         message = mRepository.readMessage();
-                        mRepository.sendMessage("SCHD " + job.getJobId() + " " + mServerProvider.getServer(largestServer.getType(), serverList));
+                        if (mServerProvider instanceof  FirstFitServerProvider)
+                            ((FirstFitServerProvider) mServerProvider).setJob(job);
+                        String serverDetails = mServerProvider.getServer(largestServer.getType(), serverList);
+                        System.out.println("\t schedule To Server: " + serverDetails);
+                        mRepository.sendMessage("SCHD " + job.getJobId() + " " + serverDetails);
                         break;
                     // When server sends a complete message we send a REDY to fetch another job
                     case "JCPL":
