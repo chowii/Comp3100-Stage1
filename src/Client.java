@@ -26,17 +26,18 @@ public class Client {
      */
     public static void main(String[] args) {
         DsSystem dsSystem = null;
-
-        try {
-            Path absolutePath = FileSystems.getDefault().getPath("").toAbsolutePath();
-            dsSystem = ParseXml.parse(absolutePath + "/ds-system.xml", DsSystem.class);
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
         ClientRepository repository = new ClientRepository();
         Client client = new Client(repository, new LargestServerProvider());
         client.connectToServer();
         client.serverHandshake();
+
+        try {
+            Path absolutePath = FileSystems.getDefault().getPath("").toAbsolutePath();
+            dsSystem = ParseXml.parse(absolutePath + "/src/ds-system.xml", DsSystem.class);
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+//        dsSystem.getServerArray().getServerList().stream().max(((server, t1) -> Integer.compare(server.get)))
         client.largestServer = Collections.max(dsSystem.getServerArray().getServerList());
         client.scheduleJobs();
     }
@@ -100,14 +101,15 @@ public class Client {
                     case "JOBN": // same as "JOBP"
                     case "JOBP":
                         Job job = new Job(messageArray);
-                        mRepository.sendMessage("GETS Avail " + job.GET());
+                        mRepository.sendMessage("GETS Capable " + job.GET());
                         message = mRepository.readMessage();
                         int numOfLines = Integer.parseInt(message.split(" ")[1]);
                         mRepository.sendMessage("OK");
-                        ArrayList<String> serverStatus = mRepository.readMultiLineFromServer(numOfLines);
+                        ArrayList<Server> serverList = mRepository.getServerList(numOfLines);
+
                         mRepository.sendMessage("OK");
                         message = mRepository.readMessage();
-                        mRepository.sendMessage("SCHD " + job.getJobId() + " " + mServerProvider.getServer(serverStatus, largestServer.getType()));
+                        mRepository.sendMessage("SCHD " + job.getJobId() + " " + mServerProvider.getServer(largestServer.getType(), serverList));
                         break;
                     // When server sends a complete message we send a REDY to fetch another job
                     case "JCPL":

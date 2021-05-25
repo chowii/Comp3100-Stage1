@@ -1,5 +1,7 @@
 package scheduler;
 
+import data.Server;
+
 import java.util.ArrayList;
 
 /**
@@ -16,5 +18,5 @@ public interface ServerProvider {
      * @param serverType
      * @return Server type and id
      */
-    String getServer(ArrayList<String> serverList, String serverType);
+    String getServer(String serverType, ArrayList<Server> serverList);
 }

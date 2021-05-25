@@ -1,5 +1,7 @@
 package scheduler;
 
+import data.Server;
+
 import java.util.ArrayList;
 
 /**
@@ -19,12 +21,11 @@ public class LargestServerProvider implements ServerProvider {
      * @return serverType and id
      */
     @Override
-    public String getServer(ArrayList<String> serverList, String serverType) {
+    public String getServer(String serverType, ArrayList<Server> serverList) {
         int id = 0;
-        for(String server : serverList) {
-            String[] receivedServerData = server.split(" ");
-            String receivedServerType = receivedServerData[0];
-            int receivedServerId = Integer.parseInt(receivedServerData[1]);
+        for(Server server : serverList) {
+            String receivedServerType = server.getType();
+            int receivedServerId = server.getId();
             if (receivedServerType.equals(serverType)) {
                 id = Math.min(receivedServerId, id);
             }

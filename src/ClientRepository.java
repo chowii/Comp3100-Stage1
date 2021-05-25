@@ -1,9 +1,12 @@
+import data.Server;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class ClientRepository {
 
@@ -72,6 +75,32 @@ public class ClientRepository {
             return lines;
         } catch (IOException e) {
             message = "Error";
+            return null;
+        }
+    }
+
+    public ArrayList<Server> getServerList(int numLines) {
+        ArrayList<Server> serverArrayList = new ArrayList<>();
+        try {
+            for (int i = 0; i < numLines; i++) {
+                message = readMessage();
+                System.out.println("message: " + message);
+                String[] messageSplit = message.split(" ");
+                Server parsedServer = new Server(
+                        messageSplit[0],
+                        Integer.parseInt(messageSplit[1]),
+                        messageSplit[2],
+                        Integer.parseInt(messageSplit[3]),
+                        Integer.parseInt(messageSplit[4]),
+                        Integer.parseInt(messageSplit[5]),
+                        Integer.parseInt(messageSplit[6])
+                );
+                serverArrayList.add(parsedServer);
+                isNoneReceived = message.equals("NONE");
+            }
+            return serverArrayList;
+        } catch (IOException exception) {
+            message = "error";
             return null;
         }
     }
