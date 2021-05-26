@@ -11,6 +11,9 @@ public class FirstFitServerProvider implements ServerProvider {
     private ArrayList<Server> mServerArrayList;
     private Job mJob;
 
+    public FirstFitServerProvider() {
+    }
+
     public FirstFitServerProvider(List<Server> mServerArrayList) {
         this.mServerArrayList = (ArrayList<Server>) mServerArrayList;
     }
@@ -19,6 +22,10 @@ public class FirstFitServerProvider implements ServerProvider {
         System.out.println("========================================JOB========================================");
         System.out.println("ID: " + job.getJobId() + " " + job.GET());
         this.mJob = job;
+    }
+
+    public void setServerArrayList(List<Server> serverArrayList) {
+        this.mServerArrayList = (ArrayList<Server>) serverArrayList;
     }
 
     @Override

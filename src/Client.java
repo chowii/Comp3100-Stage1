@@ -1,6 +1,7 @@
 import data.DsSystem;
 import data.Job;
 import data.Server;
+import scheduler.BestFitServerProvider;
 import scheduler.FirstFitServerProvider;
 import scheduler.LargestServerProvider;
 import scheduler.ServerProvider;
@@ -31,6 +32,11 @@ public class Client {
         System.out.println("Running");
         DsSystem dsSystem = null;
         ClientRepository repository = new ClientRepository();
+        FirstFitServerProvider firstFit = new FirstFitServerProvider();
+        BestFitServerProvider bestFit = new BestFitServerProvider();
+        Client client = new Client(repository, bestFit);
+        client.connectToServer();
+        client.serverHandshake();
 
         try {
             Path absolutePath = FileSystems.getDefault().getPath("").toAbsolutePath();
@@ -40,10 +46,9 @@ public class Client {
         }
 
         dsSystem.getServerArray().getServerList().sort(Comparator.comparingInt(Server::getCoreCount));
-        Client client = new Client(repository, new FirstFitServerProvider(dsSystem.getServerArray().getServerList()));
+        firstFit.setServerArrayList(dsSystem.getServerArray().getServerList());
+        bestFit.setServerArrayList(dsSystem.getServerArray().getServerList());
         client.largestServer = dsSystem.getServerArray().getServerList().get(dsSystem.getServerArray().getServerList().size() - 1);
-        client.connectToServer();
-        client.serverHandshake();
         client.scheduleJobs();
     }
 
@@ -117,6 +122,8 @@ public class Client {
                         message = mRepository.readMessage();
                         if (mServerProvider instanceof  FirstFitServerProvider)
                             ((FirstFitServerProvider) mServerProvider).setJob(job);
+                        else if (mServerProvider instanceof BestFitServerProvider)
+                            ((BestFitServerProvider) mServerProvider).setJob(job);
                         String serverDetails = mServerProvider.getServer(largestServer.getType(), serverList);
                         System.out.println("\t schedule To Server: " + serverDetails);
                         mRepository.sendMessage("SCHD " + job.getJobId() + " " + serverDetails);
