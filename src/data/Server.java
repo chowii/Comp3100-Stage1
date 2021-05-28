@@ -111,6 +111,10 @@ public class Server implements Comparable<Server> {
         return hourlyRate;
     }
 
+    public Double getDoubleHourlyRate() {
+        return Double.parseDouble(hourlyRate);
+    }
+
     /**
      * This method is used to get the corecount of the servers,
      * the XML parser uses the annotation to get the coreCount
