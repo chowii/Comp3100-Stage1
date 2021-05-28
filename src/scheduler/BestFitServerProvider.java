@@ -31,8 +31,6 @@ public class BestFitServerProvider implements ServerProvider {
     public String getServer(String serverType, ArrayList<Server> serverList) {
         int bestFit = Integer.MAX_VALUE;
         int minAvail = Integer.MAX_VALUE;
-        Server bestServer = null;
-        boolean found = false;
 
         for (Server server : serverList) {
             if (server.getCoreCount() >= mJob.getCore() && server.getDisk() >= mJob.getDisk() && server.getMemory() >= mJob.getMemory()) {
@@ -47,9 +45,8 @@ public class BestFitServerProvider implements ServerProvider {
                         case "active":
                         case "unavailable":
                         {
-                            found = true;
-                            bestServer = server;
-                            break;
+                            System.out.println("found");
+                            return server.getType() + " " + server.getId();
                         }
                         default:
                             break;
@@ -57,22 +54,17 @@ public class BestFitServerProvider implements ServerProvider {
                 }
             }
         }
-        if (found) {
-            return bestServer.getType() + " " + bestServer.getId();
-        } else {
-            int bestFitAlt = Integer.MAX_VALUE;
-            Server bestServerAlt = null;
-            for (Server server : mServerArrayList) {
-                int fitValueAlt = server.getCoreCount() - mJob.getCore();
-                if (fitValueAlt >= 0 && fitValueAlt < bestFitAlt && server.getDisk() >= mJob.getDisk() && server.getMemory() >= mJob.getMemory()) {
-                    bestFitAlt = fitValueAlt;
-                    bestServerAlt = server;
-                }
+        int bestFitAlt = Integer.MAX_VALUE;
+        for (Server server : mServerArrayList) {
+            int fitValueAlt = server.getCoreCount() - mJob.getCore();
+            if (fitValueAlt >= 0 && fitValueAlt < bestFitAlt && server.getDisk() >= mJob.getDisk() && server.getMemory() >= mJob.getMemory()) {
+                System.out.println("fallback");
+                server.setId(0);
+                return server.getType() + " " + server.getId();
             }
-            bestServerAlt.setId(0);
-            return bestServerAlt.getType() + " " + bestServerAlt.getId();
         }
 
-
+        System.out.println("not found");
+        return null;
     }
 }
