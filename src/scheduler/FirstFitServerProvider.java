@@ -34,17 +34,18 @@ public class FirstFitServerProvider implements ServerProvider {
 
     @Override
     public String getServer(String serverType, ArrayList<Server> serverList) {
+//        serverList.stream().filter(server ->
+//                server.getCoreCount() >= mJob.getCore() && server.getDisk() >= mJob.getDisk() && server.getMemory() >= mJob.getMemory()
+//        ).forEach(System.out::println);
 //        considerLogging();
 //        for (int j = startingIndexDsServerList; j < mServerArrayList.size(); j++) {
 //            Server dsServer = mServerArrayList.get(j);
-            for (int i = startingIndexJobServerList; i <serverList.size(); i++) {
-                Server server = serverList.get(i);
+            for (Server server : serverList) {
                 // && server.getEstimatedRuntime() >= mJob.getEstRuntime()
 //                if (dsServer.getType().equals(server.getType())) {
                     if (server.getCoreCount() >= mJob.getCore() && server.getDisk() >= mJob.getDisk() && server.getMemory() >= mJob.getMemory()) {
 //                        startingIndexJobServerList = j;
-                        startingIndexDsServerList = i;
-                        System.out.println("found");
+//                        startingIndexDsServerList = i;
                         return server.getType() + " " + server.getId();
                     }
                 }

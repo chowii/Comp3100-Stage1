@@ -10,6 +10,9 @@ public class BestFitServerProvider implements ServerProvider {
     private ArrayList<Server> mServerArrayList;
     private Job mJob;
 
+    private int startingIndex;
+    private int fallbackIndex;
+
     public BestFitServerProvider() {
 
     }
@@ -35,6 +38,10 @@ public class BestFitServerProvider implements ServerProvider {
         for (Server server : serverList) {
             if (server.getCoreCount() >= mJob.getCore() && server.getDisk() >= mJob.getDisk() && server.getMemory() >= mJob.getMemory()) {
                 int fitValue = server.getCoreCount() - mJob.getCore();
+//                System.out.println("status: " + server.getState());
+                if (server.getState().equalsIgnoreCase("active")) {
+                    continue;
+                }
                 if ((fitValue < bestFit) || fitValue == bestFit && server.getEstimatedRuntime() < minAvail) {
                     bestFit = fitValue;
                     minAvail = server.getEstimatedRuntime();
@@ -43,7 +50,6 @@ public class BestFitServerProvider implements ServerProvider {
                         case "booting":
                         case "idle":
                         case "active":
-                        case "unavailable":
                         {
                             System.out.println("found");
                             return server.getType() + " " + server.getId();
@@ -58,7 +64,6 @@ public class BestFitServerProvider implements ServerProvider {
         for (Server server : mServerArrayList) {
             int fitValueAlt = server.getCoreCount() - mJob.getCore();
             if (fitValueAlt >= 0 && fitValueAlt < bestFitAlt && server.getDisk() >= mJob.getDisk() && server.getMemory() >= mJob.getMemory()) {
-                System.out.println("fallback");
                 server.setId(0);
                 return server.getType() + " " + server.getId();
             }

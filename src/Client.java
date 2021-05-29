@@ -32,9 +32,9 @@ public class Client {
         System.out.println("========================================STARTED========================================");
         DsSystem dsSystem = null;
         ClientRepository repository = new ClientRepository();
-//        FirstFitServerProvider firstFit = new FirstFitServerProvider();
-        BestFitServerProvider bestFit = new BestFitServerProvider();
-        Client client = new Client(repository, bestFit);
+        FirstFitServerProvider firstFit = new FirstFitServerProvider();
+//        BestFitServerProvider bestFit = new BestFitServerProvider();
+        Client client = new Client(repository, firstFit);
         client.connectToServer();
         client.serverHandshake();
 
@@ -45,9 +45,20 @@ public class Client {
             e.printStackTrace();
         }
 
-        dsSystem.getServerArray().getServerList().sort(Comparator.comparingDouble(Server::getCoreCount));
-//        firstFit.setServerArrayList(dsSystem.getServerArray().getServerList());
-        bestFit.setServerArrayList(dsSystem.getServerArray().getServerList());
+        dsSystem.getServerArray().getServerList().sort(Comparator.comparingInt(Server::getCoreCount));
+        dsSystem.getServerArray().getServerList().forEach(server -> {
+            System.out.println(
+                    "Type: " + server.getType() + "\n" +
+                            " Limit: " + server.getLimit() + "\n" +
+                            " ID: " + server.getId() + "\n" +
+                            " Core: " + server.getCoreCount() + "\n" +
+                            " Memory: " + server.getMemory() + "\n" +
+                            " Disk: " + server.getDisk() + "\n" +
+                            " Runtime: " + server.getEstimatedRuntime()
+            );
+        });
+        firstFit.setServerArrayList(dsSystem.getServerArray().getServerList());
+//        bestFit.setServerArrayList(dsSystem.getServerArray().getServerList());
         client.largestServer = dsSystem.getServerArray().getServerList().get(0);
         client.scheduleJobs();
         System.out.println("========================================COMPLETED========================================");
@@ -117,7 +128,34 @@ public class Client {
                         int numOfLines = Integer.parseInt(message.split(" ")[1]);
                         mRepository.sendMessage("OK");
                         ArrayList<Server> serverList = mRepository.getServerList(numOfLines);
-                        serverList.sort(Comparator.comparingInt(Server::getCoreCount));
+                        serverList.sort(Comparator.comparingInt(a -> a.getServerState().ordinal()));
+                        long idleCount = serverList.stream().filter(server -> server.getServerState() == Server.ServerState.IDLE).count();
+                        long activeCount = serverList.stream().filter(server -> server.getServerState() == Server.ServerState.ACTIVE).count();
+                        long inactiveCount = serverList.stream().filter(server -> server.getServerState() == Server.ServerState.INACTIVE).count();
+                        long bootingCount = serverList.stream().filter(server -> server.getServerState() == Server.ServerState.BOOTING).count();
+                        long unavailCount = serverList.stream().filter(server -> server.getServerState() == Server.ServerState.UNAVAILABLE).count();
+
+//                        System.out.println(
+//                                "idle: " + idleCount + "\n" +
+//                                "active: " + activeCount + "\n" +
+//                                "inactive: " + inactiveCount + "\n" +
+//                                "booting: " + bootingCount + "\n" +
+//                                "unavail: " + unavailCount + "\n"
+//                        );
+
+//                        serverList.forEach(server -> {
+//                            System.out.println("======================================== "+ server.getType().toUpperCase() +" ========================================");
+//                            System.out.println(
+//                                    "Type: " + server.getType() + "\n" +
+//                                    "Id: " + server.getId() + "\n" +
+//                                    "State: " + server.getState() + "\n" +
+//                                    "Core: " + server.getCoreCount() + "\n" +
+//                                    "Memory: " + server.getMemory() + "\n" +
+//                                    "Disk: " + server.getDisk() + "\n" +
+//                                    "Runtime: " + server.getEstimatedRuntime()
+//                            );
+//                            System.out.println("-------------------------------------------------------------------------------");
+//                        });
 
                         mRepository.sendMessage("OK");
                         message = mRepository.readMessage();

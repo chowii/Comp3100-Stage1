@@ -18,6 +18,20 @@ public class Server implements Comparable<Server> {
     private String state;
     private int id;
 
+    public enum ServerState {
+        IDLE("idle"),
+        BOOTING("booting"),
+        INACTIVE("inactive"),
+        ACTIVE("active"),
+        UNAVAILABLE("unavailable");
+
+        public final String state;
+
+        private ServerState(String state) {
+            this.state = state;
+        }
+    }
+
     public Server() {
         // empty default constructor
     }
@@ -151,6 +165,10 @@ public class Server implements Comparable<Server> {
 
     public String getState() {
         return state;
+    }
+
+    public ServerState getServerState() {
+        return ServerState.valueOf(state.toUpperCase());
     }
 
     public int getId() {
