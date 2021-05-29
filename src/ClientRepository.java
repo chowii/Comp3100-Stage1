@@ -84,7 +84,6 @@ public class ClientRepository {
         try {
             for (int i = 0; i < numLines; i++) {
                 message = readMessage();
-                System.out.println("message: " + message);
                 String[] messageSplit = message.split(" ");
                 Server parsedServer = new Server(
                         messageSplit[0],
