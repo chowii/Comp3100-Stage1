@@ -1,26 +1,15 @@
-import data.DsSystem;
 import data.Job;
 import data.Server;
-import scheduler.BestFitServerProvider;
-import scheduler.FirstFitServerProvider;
-import scheduler.LargestServerProvider;
+import scheduler.LowestWaitingJobsServerProvider;
 import scheduler.ServerProvider;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import javax.xml.bind.JAXBException;
 
 public class Client {
-    private ClientRepository mRepository;
+    private final ClientRepository mRepository;
     private String message;
-    Server largestServer = null;
-    ServerProvider mServerProvider = null;
-    DsSystem dsSystem = null;
+    ServerProvider mServerProvider;
 
     /**
      * [main]
@@ -30,23 +19,12 @@ public class Client {
      * @param args
      */
     public static void main(String[] args) {
-        System.out.println("========================================STARTED========================================");
         ClientRepository repository = new ClientRepository();
-        FirstFitServerProvider firstFit = new FirstFitServerProvider();
-        Client client = new Client(repository, firstFit);
+        LowestWaitingJobsServerProvider serverProvider = new LowestWaitingJobsServerProvider();
+        Client client = new Client(repository, serverProvider);
         client.connectToServer();
         client.serverHandshake();
-
-        try {
-            Path absolutePath = FileSystems.getDefault().getPath("").toAbsolutePath();
-            client.dsSystem = ParseXml.parse(absolutePath + "/ds-system.xml", DsSystem.class);
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-
-        client.largestServer = client.dsSystem.getServerArray().getServerList().get(0);
         client.scheduleJobs();
-        System.out.println("========================================COMPLETED========================================");
     }
 
     public Client(ClientRepository repository, ServerProvider serverProvider) {
