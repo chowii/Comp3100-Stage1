@@ -20,6 +20,7 @@ public class Client {
     private String message;
     Server largestServer = null;
     ServerProvider mServerProvider = null;
+    DsSystem dsSystem = null;
 
     /**
      * [main]
@@ -30,7 +31,6 @@ public class Client {
      */
     public static void main(String[] args) {
         System.out.println("========================================STARTED========================================");
-        DsSystem dsSystem = null;
         ClientRepository repository = new ClientRepository();
         FirstFitServerProvider firstFit = new FirstFitServerProvider();
         Client client = new Client(repository, firstFit);
@@ -39,14 +39,12 @@ public class Client {
 
         try {
             Path absolutePath = FileSystems.getDefault().getPath("").toAbsolutePath();
-            dsSystem = ParseXml.parse(absolutePath + "/ds-system.xml", DsSystem.class);
+            client.dsSystem = ParseXml.parse(absolutePath + "/ds-system.xml", DsSystem.class);
         } catch (JAXBException e) {
             e.printStackTrace();
         }
 
-        dsSystem.getServerArray().getServerList().sort(Comparator.comparingInt(Server::getCoreCount));
-        firstFit.setServerArrayList(dsSystem.getServerArray().getServerList());
-        client.largestServer = dsSystem.getServerArray().getServerList().get(0);
+        client.largestServer = client.dsSystem.getServerArray().getServerList().get(0);
         client.scheduleJobs();
         System.out.println("========================================COMPLETED========================================");
     }
@@ -115,16 +113,11 @@ public class Client {
                         int numOfLines = Integer.parseInt(message.split(" ")[1]);
                         mRepository.sendMessage("OK");
                         ArrayList<Server> serverList = mRepository.getServerList(numOfLines);
-                        serverList.sort(Comparator.comparingInt(a -> a.getServerState().ordinal()));
 
                         mRepository.sendMessage("OK");
                         message = mRepository.readMessage();
-                        if (mServerProvider instanceof  FirstFitServerProvider)
-                            ((FirstFitServerProvider) mServerProvider).setJob(job);
-                        else if (mServerProvider instanceof BestFitServerProvider)
-                            ((BestFitServerProvider) mServerProvider).setJob(job);
-                        String serverDetails = mServerProvider.getServer(largestServer.getType(), serverList);
-                        mRepository.sendMessage("SCHD " + job.getJobId() + " " + serverDetails);
+                        Server server = mServerProvider.getServer(serverList);
+                        mRepository.sendMessage("SCHD " + job.getJobId() + " " + getServerDetails(server));
                         break;
                     // When server sends a complete message we send a REDY to fetch another job
                     case "JCPL":
@@ -141,6 +134,10 @@ public class Client {
             e.printStackTrace();
         }
 
+    }
+
+    private String getServerDetails(Server server) {
+        return server.getType() + " " + server.getId();
     }
 
     public void quit() throws IOException {

@@ -9,6 +9,13 @@ import java.util.ArrayList;
  * for providing Largest Server
  */
 public class LargestServerProvider implements ServerProvider {
+
+    private String mServerType;
+
+    public LargestServerProvider(String serverType) {
+        this.mServerType = serverType;
+    }
+
     /**
      * This method essentially obtain the largest server type
      * this is needed when we are doing the job scheduling since we
@@ -21,15 +28,17 @@ public class LargestServerProvider implements ServerProvider {
      * @return serverType and id
      */
     @Override
-    public String getServer(String serverType, ArrayList<Server> serverList) {
+    public Server getServer(ArrayList<Server> serverList) {
+        Server largestServer = null;
         int id = 0;
         for(Server server : serverList) {
             String receivedServerType = server.getType();
             int receivedServerId = server.getId();
-            if (receivedServerType.equals(serverType)) {
+            if (receivedServerType.equals(mServerType)) {
                 id = Math.min(receivedServerId, id);
+                largestServer = server;
             }
         }
-        return serverType + " " + id;
+        return largestServer;
     }
 }

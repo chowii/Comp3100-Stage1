@@ -2,6 +2,8 @@ package data;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Collections;
+import java.util.Comparator;
 
 @XmlRootElement(name = "server")
 public class Server implements Comparable<Server> {
@@ -17,6 +19,8 @@ public class Server implements Comparable<Server> {
     private int estimatedRuntime;
     private String state;
     private int id;
+    private int waitingTime;
+    private int numOfRunningJobs;
 
     public enum ServerState {
         IDLE("idle"),
@@ -46,7 +50,7 @@ public class Server implements Comparable<Server> {
         this.disk = disk;
     }
 
-    public Server(String type, int id, String state, int estimatedRuntime, int coreCount, int memory, int disk) {
+    public Server(String type, int id, String state, int estimatedRuntime, int coreCount, int memory, int disk, int waitingTime, int numOfRunningJobs) {
         this.type = type;
         this.id = id;
         this.state = state;
@@ -54,6 +58,8 @@ public class Server implements Comparable<Server> {
         this.coreCount = coreCount;
         this.memory = memory;
         this.disk = disk;
+        this.waitingTime = waitingTime;
+        this.numOfRunningJobs = numOfRunningJobs;
     }
 
     // The Setters for the server
@@ -175,6 +181,18 @@ public class Server implements Comparable<Server> {
         return id;
     }
 
+    public int getWaitingTime() {
+        return waitingTime;
+    }
+
+    public int getNumOfRunningJobs() {
+        return numOfRunningJobs;
+    }
+
+    public int getIntBootupTime() {
+        return Integer.parseInt(bootupTime);
+    }
+
     @Override
     public String toString() {
         return "type: " + type +
@@ -200,11 +218,8 @@ public class Server implements Comparable<Server> {
 
     @Override
     public int compareTo(Server server) {
-        // The order of comparison is : Corecount -> Memory -> Disk space
-        int coreComparison = Integer.compare(coreCount, server.coreCount);
-        int memoryComparison = Integer.compare(memory, server.memory);
-        int diskComparison = Integer.compare(disk, server.disk);
-        return coreComparison != 0 ? coreComparison : memoryComparison != 0 ? memoryComparison : diskComparison;
+        // The order of comparison is : Corecount
+        return Integer.compare(server.getCoreCount(), coreCount);
     }
 
     public void setId(int id) {

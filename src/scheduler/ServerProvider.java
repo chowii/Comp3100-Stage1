@@ -15,8 +15,7 @@ public interface ServerProvider {
     /**
      * Finds appropriate Server from serverList and serverType
      * @param serverList
-     * @param serverType
      * @return Server type and id
      */
-    String getServer(String serverType, ArrayList<Server> serverList);
+    Server getServer(ArrayList<Server> serverList);
 }
